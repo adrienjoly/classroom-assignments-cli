@@ -4,10 +4,11 @@
   "author": "Adrien Joly <adrien.joly@gmail.com>",
   "repository": "https://github.com/adrienjoly/classroom-assignments-cli.git",
   "scripts": {
-    "start": "source .env; node src/download-students.js; node src/download-submissions.js; node src/convert-submissions.js",
-    "list": "source .env; node src/list-assignments.js"
+    "start": "node src/download-students.js; node src/download-submissions.js; node src/convert-submissions.js",
+    "list": "node src/list-assignments.js"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "google-auth-library": "^0.9.8",
     "googleapis": "^14.0.0"
   }
