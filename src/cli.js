@@ -11,36 +11,11 @@ const renderTimeDate = time => time.split('T')[0]
 
 const renderDate = date => `${date.year}-${date.month}-${date.day}`
 
-// returns [ { fetchedAttachments: [ { err || source,html,css,js } ] } ]
-function extractSubmission(submission, callback) {
-  var urls = ((submission.assignmentSubmission || {}).attachments || [])
+const extractLatestUrlsFromSubmission = ({ assignmentSubmission }) =>
+  ((assignmentSubmission || {}).attachments || [])
     .map((a) => (a.link || {}).url)
     .filter((url) => !!url) // only keep URL attachments
     .reverse() // start with most recent attachment
-  var fetchedOne = false
-  // will keep iterating on attachments until one URL is fetched successfully
-  async.mapSeries(urls, function(url, next) {
-    //console.log('Fetching ' + url + '...')
-    if (fetchedOne) {
-      next()
-    } else {
-      fetchers.fetchByUrl(url, (err, res) => {
-        fetchedOne = !res.err
-          next(err, res)
-      })
-    }
-  }, function(err, fetchedAttachments) {
-    callback(err, {
-      _gcla_subm: submission, // original submission, as returned by google classroom API
-      fetchedAttachments: fetchedAttachments.filter((att) => !!att), // remove null values
-    })
-  })
-}
-
-// returns an array of objects (submission -> [ { fetchedAttachments } ])
-function extractSubmissions(turnedIn, callback) {
-  async.mapSeries(turnedIn, extractSubmission, callback)
-}
 
 const args = process.argv.slice(2)
 const USAGE = `$ ./gclass <command> <parameter>`
@@ -75,6 +50,14 @@ const COMMANDS = {
     studentSubmissions.forEach(subm =>
       console.log(`- student ${subm.userId} ${subm.state} on ${subm.updateTime} with grade ${subm.draftGrade}`)
     )
+  },
+  'list-submitted-urls': async (courseId, courseWorkId) => {
+    const { studentSubmissions } = await listSubmissions(courseId, courseWorkId)
+    console.log(`=> found ${(studentSubmissions || []).length} submissions:`)
+    studentSubmissions.forEach(subm => {
+      const lastUrlSubmitted = extractLatestUrlsFromSubmission(subm)[0] || '(no URL)'
+      console.log(`- URL submitted by student ${subm.userId} on ${subm.updateTime}: ${lastUrlSubmitted}`)
+    })
   }
 }
 
