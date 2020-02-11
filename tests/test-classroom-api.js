@@ -1,4 +1,3 @@
-var readline = require('readline')
 var gcla = require('../lib/google-classroom')
 var googleClient = require('../lib/google-api-client')
 
@@ -9,10 +8,13 @@ var courseByName = (c) => c.name === courseName
 var courseWorkByTitle = (c) => c.title === courseWorkTitle
 var submissionIsTurnedIn = (s) => s.state === 'TURNED_IN'
 
-function whenLogged(err, sesId) {
-  if (err) {
+// auth using user_token.json or oauth
+googleClient
+  .auth()
+  .catch(err => {
     console.error('Error: ', err)
-  } else {
+  })
+  .then(sesId => {
     console.log('fetching courses ...')
     gcla.listCourses(function(err, res) {
       console.log('=> courses:', err || courses)
@@ -35,8 +37,4 @@ function whenLogged(err, sesId) {
         })
       })
     })
-  }
-}
-
-// auth using user_token.json or oauth
-googleClient.auth(whenLogged)
+  });

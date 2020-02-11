@@ -4,6 +4,7 @@
   "author": "Adrien Joly <adrien.joly@gmail.com>",
   "repository": "https://github.com/adrienjoly/classroom-assignments-cli.git",
   "scripts": {
+    "test": "node tests/test.js",
     "start": "node src/download-students.js; node src/download-submissions.js; node src/convert-submissions.js",
     "list": "node src/list-assignments.js"
   },

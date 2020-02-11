@@ -1,50 +1,33 @@
-var async = require('async')
-var converter = require('../lib/submission-converter')
-var students = require('../lib/student-profiles')
+const util = require('util')
+const gcla = require('../lib/google-classroom')
+const googleClient = require('../lib/google-api-client')
 
-const outputFile = 'submissions-all.pdf'
+const listCourses = util.promisify(gcla.listCourses)
+const listCourseWorks = util.promisify(gcla.listCourseWorks)
+const listSubmissions = util.promisify(gcla.listSubmissions)
 
-//const sampleSubmissions = [ require('../samples/turned-in-student-submission.json') ]
-const sampleSubmissions = [
-  require('../submissions-classe-1.json'),
-  require('../submissions-classe-2.json'),
-  require('../submissions-classe-3.json'),
-].reduce((acc, groupSubms) => acc.concat(groupSubms), [])
-
-async.mapSeries(sampleSubmissions, function(subm, callback) {
-  const attachments = subm.assignmentSubmission.attachments || []
-  const name = students.getStudentById(subm.userId).name.fullName
-  console.log('\nstudent:', name + ', attachments: ' + (attachments.length || '0 => skipping'))
-  if (!attachments.length) {
-    callback(null, null)
-    return
-  }
-  converter.extractSubmission(subm, function(err, subm) {
-    if (err) {
-      console.log('=>', err)
-      callback(err)
-    } else {
-      console.log('=>', subm.fetchedAttachments.map(function(att) {
-        return att.err || (att.source.join(':') + ' -> ' + Object.keys(att).join(', '))
-      }))
-      if (subm.fetchedAttachments.length > 1) {
-        console.warn('\n   WARNING: student has more than 1 fetched attachment!')
-      }
-      if (subm.fetchedAttachments.length !== attachments.length) {
-        console.warn('\n   WARNING: not all student\'s attachments were fetched')
-      }
-      //console.log('=> (enriched)', converter.getEnrichedAttachments(subm))
-      callback(null, subm)
-    }
+googleClient
+  .auth() // auth using user_token.json or oauth
+  .catch(err => {
+    console.error('Error: ', err)
   })
-}, function(err, studentSubmissions) {
-  console.log('\n=>', studentSubmissions.length, 'students')
-  studentSubmissions = studentSubmissions.filter((subm) => !!subm) // remove null items
-  console.log('  ', studentSubmissions.length, 'have submitted a copy')
-
-  //var html = converter.toHTML(studentSubmissions)
-  //console.log('\n=> HTML:', html)
-  converter.toPDF(outputFile, studentSubmissions, function(err) {
-    console.log(err || '\nrendered to ' + outputFile)
+  .then(async () => {
+    console.log('fetching courses ...')
+    const { courses } = await listCourses()
+    console.log(`=> found ${courses.length} courses:`)
+    let oneCourseWork
+    await Promise.all(courses.map(async course => {
+      const { courseWork } = await listCourseWorks(course.id)
+      console.log(`- ${(courseWork || []).length} assignments in "${course.name}"`)
+      if (courseWork) {
+        oneCourseWork = courseWork[0]
+      }
+    }))
+    console.log(`fetching submissions for "${oneCourseWork.title}"...`)
+    const { studentSubmissions } = await listSubmissions(oneCourseWork.courseId, oneCourseWork.id)
+    console.log(`=> submissions:`)
+    studentSubmissions.forEach(subm => {
+      console.log(`- student ${subm.userId} ${subm.state} on ${subm.updateTime} with grade ${subm.draftGrade}`)
+    })
+    console.warn('✅ Done.')
   })
-})
