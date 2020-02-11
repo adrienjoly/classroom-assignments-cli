@@ -3,15 +3,13 @@ const gcla = require('../lib/google-classroom')
 const googleClient = require('../lib/google-api-client')
 
 const listCourses = util.promisify(gcla.listCourses)
+const listStudents = util.promisify(gcla.listStudents)
 const listCourseWorks = util.promisify(gcla.listCourseWorks)
 const listSubmissions = util.promisify(gcla.listSubmissions)
 
 const renderTimeDate = time => time.split('T')[0]
 
 const renderDate = date => `${date.year}-${date.month}-${date.day}`
-
-// helper
-const flatten = (arrays) => arrays.reduce((acc, arr) => [].concat.apply(acc, arr), [])
 
 // returns [ { fetchedAttachments: [ { err || source,html,css,js } ] } ]
 function extractSubmission(submission, callback) {
@@ -44,17 +42,6 @@ function extractSubmissions(turnedIn, callback) {
   async.mapSeries(turnedIn, extractSubmission, callback)
 }
 
-// adds student metadata properties to attachments of a submission
-function getEnrichedAttachments(subm) {
-  const student = students.getStudentById(subm._gcla_subm.userId)
-  return subm.fetchedAttachments.map((att) => Object.assign({
-    userId: subm._gcla_subm.userId,
-    name: student.name.fullName,
-    email: student.emailAddress,
-    _gcla_subm: subm._gcla_subm,
-  }, att))
-}
-
 const args = process.argv.slice(2)
 const USAGE = `$ ./gclass <command> <parameter>`
 const COMMANDS = {
@@ -63,6 +50,13 @@ const COMMANDS = {
     console.log(`=> found ${courses.length} courses:`)
     courses.forEach(course =>
       console.log(`- ${course.id}: [${renderTimeDate(course.creationTime)}] ${course.name} ${course.section || ''}`)
+    )
+  },
+  'list-students': async (courseId) => {
+    const { students } = await listStudents(courseId)
+    console.log(`=> found ${students.length} students:`)
+    students.forEach(({ profile }) =>
+      console.log(`- ${profile.id}: [${profile.emailAddress}] ${profile.name.fullName}`)
     )
   },
   'list-assignments': async (courseId) => {
