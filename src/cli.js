@@ -17,6 +17,14 @@ const extractLatestUrlsFromSubmission = ({ assignmentSubmission }) =>
     .filter((url) => !!url) // only keep URL attachments
     .reverse() // start with most recent attachment
 
+const makeStudentGetter = ({ students }) => {
+  const studentSet = {}
+  students.forEach(({ profile }) => {
+    studentSet[profile.id] = profile
+  })
+  return id => studentSet[id]
+}
+
 const args = process.argv.slice(2)
 const USAGE = `$ ./gclass <command> <parameter>`
 const COMMANDS = {
@@ -57,6 +65,16 @@ const COMMANDS = {
     studentSubmissions.forEach(subm => {
       const lastUrlSubmitted = extractLatestUrlsFromSubmission(subm)[0] || '(no URL)'
       console.log(`- URL submitted by student ${subm.userId} on ${subm.updateTime}: ${lastUrlSubmitted}`)
+    })
+  },
+  'list-submitted-urls-with-student-email': async (courseId, courseWorkId) => {
+    const getStudentById = makeStudentGetter(await listStudents(courseId))
+    const { studentSubmissions } = await listSubmissions(courseId, courseWorkId)
+    console.log(`=> found ${(studentSubmissions || []).length} submissions:`)
+    studentSubmissions.forEach(subm => {
+      const student = getStudentById(subm.userId)
+      const lastUrlSubmitted = extractLatestUrlsFromSubmission(subm)[0] || '(no URL)'
+      console.log(`- URL submitted by ${student.emailAddress} on ${subm.updateTime}: ${lastUrlSubmitted}`)
     })
   }
 }
