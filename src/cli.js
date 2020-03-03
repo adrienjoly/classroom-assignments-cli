@@ -67,14 +67,15 @@ const COMMANDS = {
       console.log(`- URL submitted by student ${subm.userId} on ${subm.updateTime}: ${lastUrlSubmitted}`)
     })
   },
-  'list-submitted-urls-with-student-email': async (courseId, courseWorkId) => {
+  'generate-test-script': async (courseId, courseWorkId) => {
     const getStudentById = makeStudentGetter(await listStudents(courseId))
     const { studentSubmissions } = await listSubmissions(courseId, courseWorkId)
-    console.log(`=> found ${(studentSubmissions || []).length} submissions:`)
     studentSubmissions.forEach(subm => {
       const student = getStudentById(subm.userId)
       const lastUrlSubmitted = extractLatestUrlsFromSubmission(subm)[0] || '(no URL)'
-      console.log(`- URL submitted by ${student.emailAddress} on ${subm.updateTime}: ${lastUrlSubmitted}`)
+      console.log([
+        `./test-in-docker-from-git.sh ${lastUrlSubmitted} >eval/${student.emailAddress}.txt`
+      ].join('\n')) // see https://github.com/adrienjoly/cours-nodejs-exercise-testers/blob/master/test-in-docker-from-git.sh
     })
   }
 }
