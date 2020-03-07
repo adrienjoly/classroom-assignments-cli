@@ -1,6 +1,6 @@
 # classroom-assignments-cli
 
-Fetches student-submitted URLs from Google Classroom
+Fetches courses, students, assignements and student-submitted URLs from Google Classroom.
 
 ![](./docs/1-download-classroom-submissions.png)
 
@@ -10,7 +10,12 @@ Forked from [adrienjoly/classroom-submissions-to-pdf](https://github.com/adrienj
 
 ```sh
 $ npm install
-$ npm start
+$ ./gclass list-courses
+$ ./gclass list-students 37655796951 
+$ ./gclass list-assignments 37655796951
+$ ./gclass list-submissions 37655796951 59680071412
+$ ./gclass list-submitted-urls 37655796951 59680071412
+$ ./gclass generate-test-script 37655796951 59680071412
 ```
 
 ## Setup
