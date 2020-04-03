@@ -78,7 +78,7 @@ const COMMANDS = {
       const otherUrls = submittedUrls.filter(url => !url.includes('gitlab'))
       console.log(`\n# Student ${student.emailAddress} submitted ${gitlabUrls.length} Gitlab URLs + ${otherUrls.length} other URLs: ${otherUrls.join(', ')}`)
       gitlabUrls.forEach((url, index) => {
-        console.log(`git clone ${url} --depth 1 ./student-repos/${student.emailAddress}${index > 0 ? `--${index}` : ''}`)
+        console.log(`git clone -q ${url} --depth 1 ./student-repos/${student.emailAddress}${index > 0 ? `--${index}` : ''}`)
       })
     })
     console.log(`\n# Now, let's run the exercise evaluator on each downloaded repo:`)
