@@ -70,13 +70,16 @@ const COMMANDS = {
   'generate-test-script': async (courseId, courseWorkId) => {
     const getStudentById = makeStudentGetter(await listStudents(courseId))
     const { studentSubmissions } = await listSubmissions(courseId, courseWorkId)
+    console.log(`# For use with https://github.com/adrienjoly/cours-nodejs-exercise-testers`)
     studentSubmissions.forEach(subm => {
       const student = getStudentById(subm.userId)
       const lastUrlSubmitted = extractLatestUrlsFromSubmission(subm)[0] || '(no URL)'
       console.log([
-        `./test-in-docker-from-git.sh ${lastUrlSubmitted} >eval/${student.emailAddress}.txt`
+        `git clone ${lastUrlSubmitted} --depth 1 ./student-repos/${student.emailAddress}`
       ].join('\n')) // see https://github.com/adrienjoly/cours-nodejs-exercise-testers/blob/master/test-in-docker-from-git.sh
     })
+    console.log(`# Now, let's run the exercise evaluator on each downloaded repo:`)
+    console.log(`TESTER=test-ex-1-5.js ./eval-student-submissions.sh ./student-repos/*`)
   }
 }
 
