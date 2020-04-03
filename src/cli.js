@@ -73,16 +73,15 @@ const COMMANDS = {
     console.log(`# For use with https://github.com/adrienjoly/cours-nodejs-exercise-testers`)
     studentSubmissions.forEach(subm => {
       const student = getStudentById(subm.userId)
-      const lastUrlSubmitted = extractLatestUrlsFromSubmission(subm)[0]
-      if (!lastUrlSubmitted) {
-        console.log(`# Warning: no URL was submitted by ${student.emailAddress}`)
-      } else {
-        console.log([
-          `git clone ${lastUrlSubmitted} --depth 1 ./student-repos/${student.emailAddress}`
-        ].join('\n')) // see https://github.com/adrienjoly/cours-nodejs-exercise-testers/blob/master/test-in-docker-from-git.sh
-      }
+      const submittedUrls = extractLatestUrlsFromSubmission(subm)
+      const gitlabUrls = submittedUrls.filter(url => url.includes('gitlab'))
+      const otherUrls = submittedUrls.filter(url => !url.includes('gitlab'))
+      console.log(`\n# Student ${student.emailAddress} submitted ${gitlabUrls.length} Gitlab URLs + ${otherUrls.length} other URLs: ${otherUrls.join(', ')}`)
+      gitlabUrls.forEach((url, index) => {
+        console.log(`git clone ${url} --depth 1 ./student-repos/${student.emailAddress}${index > 0 ? `--${index}` : ''}`)
+      })
     })
-    console.log(`# Now, let's run the exercise evaluator on each downloaded repo:`)
+    console.log(`\n# Now, let's run the exercise evaluator on each downloaded repo:`)
     console.log(`TESTER=test-ex-1-5.js ./eval-student-submissions.sh ./student-repos/*`)
   }
 }
