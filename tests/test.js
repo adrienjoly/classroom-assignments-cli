@@ -2,9 +2,9 @@ const util = require('util')
 const gcla = require('../lib/google-classroom')
 const googleClient = require('../lib/google-api-client')
 
-const listCourses = util.promisify(gcla.listCourses)
-const listCourseWorks = util.promisify(gcla.listCourseWorks)
-const listSubmissions = util.promisify(gcla.listSubmissions)
+const listCourses = (gcla.listCourses)
+const listCourseWorks = (gcla.listCourseWorks)
+const listSubmissions = (gcla.listSubmissions)
 
 googleClient
   .auth() // auth using user_token.json or oauth

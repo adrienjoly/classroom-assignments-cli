@@ -1,11 +1,5 @@
-const util = require('util')
 const gcla = require('../lib/google-classroom')
 const googleClient = require('../lib/google-api-client')
-
-const listCourses = util.promisify(gcla.listCourses)
-const listStudents = util.promisify(gcla.listStudents)
-const listCourseWorks = util.promisify(gcla.listCourseWorks)
-const listSubmissions = util.promisify(gcla.listSubmissions)
 
 const renderTimeDate = time => time.split('T')[0]
 
@@ -29,21 +23,21 @@ const args = process.argv.slice(2)
 const USAGE = `$ ./gclass <command> <parameter>`
 const COMMANDS = {
   'list-courses': async () => {
-    const { courses } = await listCourses()
+    const { courses } = await gcla.listCourses()
     console.log(`=> found ${courses.length} courses:`)
     courses.forEach(course =>
       console.log(`- ${course.id}: [${renderTimeDate(course.creationTime)}] ${course.name} ${course.section || ''}`)
     )
   },
   'list-students': async (courseId) => {
-    const { students } = await listStudents(courseId)
+    const { students } = await gcla.listStudents(courseId)
     console.log(`=> found ${students.length} students:`)
     students.forEach(({ profile }) =>
       console.log(`- ${profile.id}: [${profile.emailAddress}] ${profile.name.fullName}`)
     )
   },
   'list-assignments': async (courseId) => {
-    const { courseWork } = await listCourseWorks(courseId)
+    const { courseWork } = await gcla.listCourseWorks(courseId)
     console.log(`=> found ${(courseWork || []).length} assignments:`)
     courseWork.forEach(work => {
       const date = work.dueDate
@@ -53,14 +47,14 @@ const COMMANDS = {
     })
   },
   'list-submissions': async (courseId, courseWorkId) => {
-    const { studentSubmissions } = await listSubmissions(courseId, courseWorkId)
+    const { studentSubmissions } = await gcla.listSubmissions(courseId, courseWorkId)
     console.log(`=> found ${(studentSubmissions || []).length} submissions:`)
     studentSubmissions.forEach(subm =>
       console.log(`- student ${subm.userId} ${subm.state} on ${subm.updateTime} with grade ${subm.draftGrade}`)
     )
   },
   'list-submitted-urls': async (courseId, courseWorkId) => {
-    const { studentSubmissions } = await listSubmissions(courseId, courseWorkId)
+    const { studentSubmissions } = await gcla.listSubmissions(courseId, courseWorkId)
     console.log(`=> found ${(studentSubmissions || []).length} submissions:`)
     studentSubmissions.forEach(subm => {
       const lastUrlSubmitted = extractLatestUrlsFromSubmission(subm)[0] || '(no URL)'
@@ -68,8 +62,8 @@ const COMMANDS = {
     })
   },
   'generate-test-script': async (courseId, courseWorkId) => {
-    const getStudentById = makeStudentGetter(await listStudents(courseId))
-    const { studentSubmissions } = await listSubmissions(courseId, courseWorkId)
+    const getStudentById = makeStudentGetter(await gcla.listStudents(courseId))
+    const { studentSubmissions } = await gcla.listSubmissions(courseId, courseWorkId)
     console.log(`# For use with https://github.com/adrienjoly/cours-nodejs-exercise-testers`)
     studentSubmissions.forEach(subm => {
       const student = getStudentById(subm.userId)
