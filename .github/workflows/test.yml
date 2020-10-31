@@ -26,4 +26,13 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm test
+    - name: npm test
+      env:
+        GCLA_CLIENT_ID: ${{ secrets.GCLA_CLIENT_ID }}
+        GCLA_CLIENT_SECRET: ${{ secrets.GCLA_CLIENT_SECRET }}
+        GCLA_USER_TOKEN: ${{ secrets.GCLA_USER_TOKEN }}
+      run: |
+        trap "rm user_token.json" EXIT
+        echo "${GCLA_USER_TOKEN}" >user_token.json
+        npm test
+        
