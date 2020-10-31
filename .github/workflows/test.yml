@@ -35,4 +35,4 @@ jobs:
         trap "rm user_token.json" EXIT
         echo "${GCLA_USER_TOKEN}" >user_token.json
         npm test >/dev/null
-    - name: npm run semantic-release
+    - run: npm run semantic-release
