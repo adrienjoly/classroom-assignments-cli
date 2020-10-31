@@ -36,3 +36,6 @@ jobs:
         echo "${GCLA_USER_TOKEN}" >user_token.json
         npm test >/dev/null
     - run: npm run semantic-release
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        GITHUB_TOKEN: ${{ github.token }}
