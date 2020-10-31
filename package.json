@@ -5,6 +5,7 @@
   "description": "Fetches courses, students, assignments and student-submitted URLs from Google Classroom API.",
   "repository": "https://github.com/adrienjoly/classroom-assignments-cli.git",
   "main": "gclass.js",
+  "bin": "gclass.js",
   "scripts": {
     "test": "node tests/test.js",
     "start": "node gclass.js",
