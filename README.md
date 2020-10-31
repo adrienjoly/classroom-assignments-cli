@@ -1,6 +1,6 @@
-# classroom-assignments-cli
+# `gclass` – Google Classroom Assignments CLI
 
-Fetches courses, students, assignments and student-submitted URLs from Google Classroom.
+Fetches courses, students, assignments and student-submitted URLs from Google Classroom API.
 
 ![](./docs/1-download-classroom-submissions.png)
 

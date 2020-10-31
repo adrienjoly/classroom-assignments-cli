@@ -2,6 +2,7 @@
   "name": "gclass",
   "version": "0.0.0-development",
   "author": "Adrien Joly",
+  "description": "Fetches courses, students, assignments and student-submitted URLs from Google Classroom API.",
   "repository": "https://github.com/adrienjoly/classroom-assignments-cli.git",
   "main": "src/cli.js",
   "scripts": {
