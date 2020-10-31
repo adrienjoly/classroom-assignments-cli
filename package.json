@@ -1,8 +1,9 @@
 {
-  "name": "classroom-assignments-cli",
+  "name": "gclass",
   "version": "0.2.0",
-  "author": "Adrien Joly <adrien.joly@gmail.com>",
+  "author": "Adrien Joly",
   "repository": "https://github.com/adrienjoly/classroom-assignments-cli.git",
+  "main": "cli.js",
   "scripts": {
     "test": "node tests/test.js",
     "start": "node src/cli.js"
