@@ -1,15 +1,19 @@
 {
   "name": "gclass",
-  "version": "0.2.0",
+  "version": "0.0.0-development",
   "author": "Adrien Joly",
   "repository": "https://github.com/adrienjoly/classroom-assignments-cli.git",
   "main": "cli.js",
   "scripts": {
     "test": "node tests/test.js",
-    "start": "node src/cli.js"
+    "start": "node src/cli.js",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "dotenv": "^8.2.0",
     "googleapis": "^62.0.0"
+  },
+  "devDependencies": {
+    "semantic-release": "^17.2.2"
   }
 }
