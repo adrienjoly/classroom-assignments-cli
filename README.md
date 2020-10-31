@@ -9,12 +9,13 @@ Forked from [adrienjoly/classroom-submissions-to-pdf](https://github.com/adrienj
 ## Usage
 
 ```sh
-$ npx gclass list-courses
-$ npx gclass list-students 37655796951 
-$ npx gclass list-assignments 37655796951
-$ npx gclass list-submissions 37655796951 59680071412
-$ npx gclass list-submitted-urls 37655796951 59680071412
-$ npx gclass generate-test-script 37655796951 59680071412
+$ npx gclass list-courses # will list course_ids
+$ npx gclass get-course <course_id> # will display metadata about the course
+$ npx gclass list-students <course_id>
+$ npx gclass list-assignments <course_id> # will list assignment_ids
+$ npx gclass list-submissions <course_id> <assignment_id>
+$ npx gclass list-submitted-urls <course_id> <assignment_id>
+$ npx gclass generate-test-script <course_id> <assignment_id>
 ```
 
 ## Setup
@@ -29,5 +30,8 @@ All `npm` scripts that can be used are listed in the `package.json` file.
 ## Run tests
 
 ```sh
+$ git clone https://github.com/adrienjoly/classroom-assignments-cli.git
+$ cd classroom-assignments-cli
+$ npm install
 $ npm test        # => tests the Google API
 ```

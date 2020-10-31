@@ -31,6 +31,10 @@ const COMMANDS = {
       console.log(`- ${course.id}: [${renderTimeDate(course.creationTime)}] ${course.name} ${course.section || ''}`)
     )
   },
+  'get-course': async (courseId) => {
+    const { courses } = await gcla.listCourses()
+    console.log(courses.find(({ id }) => id === courseId))
+  },
   'list-students': async (courseId) => {
     const { students } = await gcla.listStudents(courseId)
     console.log(`=> found ${students.length} students:`)
