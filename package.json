@@ -3,7 +3,7 @@
   "version": "0.0.0-development",
   "author": "Adrien Joly",
   "repository": "https://github.com/adrienjoly/classroom-assignments-cli.git",
-  "main": "cli.js",
+  "main": "src/cli.js",
   "scripts": {
     "test": "node tests/test.js",
     "start": "node src/cli.js",

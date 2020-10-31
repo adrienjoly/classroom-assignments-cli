@@ -9,13 +9,12 @@ Forked from [adrienjoly/classroom-submissions-to-pdf](https://github.com/adrienj
 ## Usage
 
 ```sh
-$ npm install
-$ ./gclass list-courses
-$ ./gclass list-students 37655796951 
-$ ./gclass list-assignments 37655796951
-$ ./gclass list-submissions 37655796951 59680071412
-$ ./gclass list-submitted-urls 37655796951 59680071412
-$ ./gclass generate-test-script 37655796951 59680071412
+$ npx gclass list-courses
+$ npx gclass list-students 37655796951 
+$ npx gclass list-assignments 37655796951
+$ npx gclass list-submissions 37655796951 59680071412
+$ npx gclass list-submitted-urls 37655796951 59680071412
+$ npx gclass generate-test-script 37655796951 59680071412
 ```
 
 ## Setup

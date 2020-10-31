@@ -20,7 +20,7 @@ const makeStudentGetter = ({ students }) => {
 }
 
 const args = process.argv.slice(2)
-const USAGE = `$ ./gclass <command> <parameter>`
+const USAGE = `$ npx gclass <command> <parameter>`
 const COMMANDS = {
   'list-courses': async () => {
     const { courses } = await gcla.listCourses()
