@@ -1,5 +1,5 @@
-const gcla = require('../lib/google-classroom')
-const googleClient = require('../lib/google-api-client')
+const gcla = require('./lib/google-classroom')
+const googleClient = require('./lib/google-api-client')
 
 const renderTimeDate = time => time.split('T')[0]
 

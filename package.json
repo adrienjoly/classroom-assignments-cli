@@ -4,10 +4,10 @@
   "author": "Adrien Joly",
   "description": "Fetches courses, students, assignments and student-submitted URLs from Google Classroom API.",
   "repository": "https://github.com/adrienjoly/classroom-assignments-cli.git",
-  "main": "src/cli.js",
+  "main": "gclass.js",
   "scripts": {
     "test": "node tests/test.js",
-    "start": "node src/cli.js",
+    "start": "node gclass.js",
     "semantic-release": "semantic-release"
   },
   "dependencies": {
