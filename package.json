@@ -12,10 +12,10 @@
     "semantic-release": "semantic-release"
   },
   "dependencies": {
-    "dotenv": "^8.2.0",
-    "googleapis": "^62.0.0"
+    "dotenv": "^9.0.1",
+    "googleapis": "^73.0.0"
   },
   "devDependencies": {
-    "semantic-release": "^17.2.2"
+    "semantic-release": "^17.4.2"
   }
 }
